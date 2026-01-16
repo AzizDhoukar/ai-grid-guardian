@@ -240,7 +240,7 @@ export const mockState: Record<SiteKey, SiteData> = {
 export const sectionTitles: Record<string, [string, string]> = {
   overview: ["Overview", "Real-time control, transparent savings, and AI explanations."],
   savings: ["Verified Savings", "Measurement & verification, breakdown, and bill simulator."],
-  controls: ["Load Control", "Priorities, AI modes, and comfort/critical constraints."],
+  controls: ["Control Center", "Priorities, AI modes, and comfort/critical constraints."],
   peaks: ["Peak & Tariffs", "Demand cap, tariff windows, and demand-response readiness."],
   anomalies: ["Anomaly Detection", "Detect faults, abnormal consumption, and hidden waste."],
   portfolio: ["Multi-Building", "Portfolio view for property managers and chains."],
@@ -251,7 +251,7 @@ export const sectionTitles: Record<string, [string, string]> = {
 export const navItems = [
   { id: 'overview', label: 'Overview', badge: 'Live' },
   { id: 'savings', label: 'Verified Savings', badge: 'M&V' },
-  { id: 'controls', label: 'Load Control', badge: 'AI' },
+  { id: 'controls', label: 'Control Center', badge: 'AI' },
   { id: 'peaks', label: 'Peak & Tariffs', badge: 'TOU' },
   { id: 'anomalies', label: 'Anomaly Detection', badge: 'Alerts' },
   { id: 'portfolio', label: 'Multi-Building', badge: 'B2B' },

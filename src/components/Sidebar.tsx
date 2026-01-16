@@ -12,7 +12,7 @@ interface SidebarProps {
 
 export function Sidebar({ activeSection, onNavigate, selectedSite, onSiteChange }: SidebarProps) {
   return (
-    <aside className="w-72 border-r border-white/[0.06] bg-gradient-to-b from-card/90 to-card/85 backdrop-blur-xl sticky top-0 h-screen overflow-auto scrollbar-thin">
+    <aside className="w-72 border-r border-white/[0.06] bg-gradient-to-r from-card/90 to-card/85 backdrop-blur-xl sticky top-0 h-screen overflow-auto scrollbar-thin">
       <div className="p-5">
         {/* Brand */}
         <div className="flex items-center gap-3 px-2 pb-5">

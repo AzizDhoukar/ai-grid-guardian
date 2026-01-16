@@ -1,17 +1,24 @@
 import { motion } from "framer-motion";
 import { GlassPanel } from "@/components/ui/GlassPanel";
 import { Chip } from "@/components/ui/Chip";
-import type { SiteData } from "@/data/mockData";
-import { Sliders, Thermometer, Save } from "lucide-react";
-
-interface ControlsSectionProps {
-  data: SiteData;
-  onToast: (msg: string) => void;
-}
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
+import {
+  Home,
+  Bed,
+  Briefcase,
+  Wind,
+  Lamp,
+  RollerCoaster,
+  Tv,
+  Thermometer,
+  Droplets,
+  Lightbulb,
+} from "lucide-react";
 
 const container = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 const item = {
@@ -19,112 +26,88 @@ const item = {
   show: { opacity: 1, y: 0 },
 };
 
-export function ControlsSection({ data, onToast }: ControlsSectionProps) {
-  const getConstraint = (name: string, priority: string) => {
-    if (name.includes("HVAC")) return "22–25°C";
-    if (name.includes("Refrigeration")) return "Safe band";
-    if (priority === "Critical") return "Never shed";
-    return "Shift allowed";
-  };
+const rooms = [
+  {
+    name: "Living Room",
+    icon: <Home className="w-6 h-6" />,
+    sensors: [
+      { name: "Main Lights", icon: <Lamp className="w-5 h-5" />, type: "switch", value: true },
+      { name: "Floor Lamp", icon: <Lightbulb className="w-5 h-5" />, type: "slider", value: 60 },
+      { name: "Blinds", icon: <RollerCoaster className="w-5 h-5" />, type: "switch", value: false },
+      { name: "Television", icon: <Tv className="w-5 h-5" />, type: "switch", value: true },
+    ],
+  },
+  {
+    name: "Bedroom",
+    icon: <Bed className="w-6 h-6" />,
+    sensors: [
+      { name: "Bedside Lamp", icon: <Lightbulb className="w-5 h-5" />, type: "slider", value: 30 },
+      { name: "Blinds", icon: <RollerCoaster className="w-5 h-5" />, type: "switch", value: true },
+      { name: "Temperature", icon: <Thermometer className="w-5 h-5" />, type: "temperature", value: 21 },
+    ],
+  },
+  {
+    name: "Office",
+    icon: <Briefcase className="w-6 h-6" />,
+    sensors: [
+      { name: "Desk Lamp", icon: <Lightbulb className="w-5 h-5" />, type: "slider", value: 90 },
+      { name: "HVAC", icon: <Wind className="w-5 h-5" />, type: "temperature", value: 23 },
+      { name: "Humidity", icon: <Droplets className="w-5 h-5" />, type: "value", value: "45%" },
+    ],
+  },
+];
 
+export function ControlsSection() {
   return (
-    <motion.div
-      className="grid grid-cols-1 lg:grid-cols-12 gap-4"
-      variants={container}
-      initial="hidden"
-      animate="show"
-    >
-      {/* Load Priority Control */}
-      <GlassPanel variants={item} className="lg:col-span-7">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center">
-            <Sliders className="w-4 h-4 text-primary" />
-          </div>
-          <h3 className="text-sm font-medium">Load Priority Control</h3>
-        </div>
-        <p className="text-xs text-muted-foreground mb-4">
-          Set priorities and boundaries (comfort/critical loads).
-        </p>
-
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-white/[0.06]">
-              <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Load</th>
-              <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Priority</th>
-              <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">AI Mode</th>
-              <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Constraint</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.loads.map((load, i) => (
-              <motion.tr
-                key={load.name}
-                className="border-b border-white/[0.04] last:border-0"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <td className="py-3 px-2 font-medium">{load.name}</td>
-                <td className="py-3 px-2">
-                  <Chip
-                    status={load.priority === 'Critical' ? 'good' : load.priority === 'Flexible' ? 'info' : 'warn'}
-                  >
-                    {load.priority}
-                  </Chip>
-                </td>
-                <td className="py-3 px-2 text-muted-foreground">{load.mode}</td>
-                <td className="py-3 px-2 text-muted-foreground">{getConstraint(load.name, load.priority)}</td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div className="h-px bg-white/[0.06] my-4" />
-        <p className="text-xs text-muted-foreground">
-          Priority meanings: <strong>Critical</strong> = never shed, <strong>Flexible</strong> = shift time, <strong>Non-critical</strong> = optimize aggressively.
-        </p>
-      </GlassPanel>
-
-      {/* Comfort Boundaries */}
-      <GlassPanel variants={item} className="lg:col-span-5">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-accent/15 flex items-center justify-center">
-            <Thermometer className="w-4 h-4 text-accent" />
-          </div>
-          <h3 className="text-sm font-medium">Comfort Boundaries</h3>
-        </div>
-
-        <div className="space-y-3">
-          <div className="flex justify-between items-center py-2 border-b border-white/[0.04]">
-            <span className="text-sm text-muted-foreground">Min temp (office)</span>
-            <span className="font-semibold">22°C</span>
-          </div>
-          <div className="flex justify-between items-center py-2 border-b border-white/[0.04]">
-            <span className="text-sm text-muted-foreground">Max temp (office)</span>
-            <span className="font-semibold">25°C</span>
-          </div>
-          <div className="flex justify-between items-center py-2 border-b border-white/[0.04]">
-            <span className="text-sm text-muted-foreground">Lighting minimum</span>
-            <span className="font-semibold">70%</span>
-          </div>
-          <div className="flex justify-between items-center py-2">
-            <span className="text-sm text-muted-foreground">Critical uptime</span>
-            <span className="font-semibold">99.9%</span>
-          </div>
-        </div>
-
-        <div className="h-px bg-white/[0.06] my-4" />
-
-        <motion.button
-          onClick={() => onToast('Demo: settings saved')}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-success/15 border border-success/30 text-sm text-success font-medium transition-all hover:bg-success/20"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <Save className="w-4 h-4" />
-          Save settings
-        </motion.button>
-      </GlassPanel>
-    </motion.div>
+    <div>
+      <motion.div
+        className="grid grid-cols-1 xl:grid-cols-2 gap-6"
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
+        {rooms.map((room) => (
+          <GlassPanel key={room.name} variants={item}>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                {room.icon}
+              </div>
+              <h3 className="text-xl font-semibold">{room.name}</h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {room.sensors.map((sensor) => (
+                <GlassPanel key={sensor.name} className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="text-muted-foreground">{sensor.icon}</div>
+                      <h4 className="font-medium text-sm">{sensor.name}</h4>
+                    </div>
+                    {sensor.type === "switch" && <Switch checked={sensor.value as boolean} />}
+                  </div>
+                  {sensor.type === "slider" && (
+                    <div className="flex items-center gap-3">
+                      <Slider defaultValue={[sensor.value as number]} max={100} step={1} />
+                      <span className="text-xs font-mono w-12 text-right">{sensor.value}%</span>
+                    </div>
+                  )}
+                  {sensor.type === "temperature" && (
+                     <div className="flex items-center justify-between">
+                        <span className="text-2xl font-bold">{sensor.value}°C</span>
+                        <div className="flex gap-1">
+                            <button className="w-8 h-8 rounded-full bg-primary/10 hover:bg-primary/20">-</button>
+                            <button className="w-8 h-8 rounded-full bg-primary/10 hover:bg-primary/20">+</button>
+                        </div>
+                     </div>
+                  )}
+                   {sensor.type === "value" && (
+                     <span className="text-2xl font-bold">{sensor.value}</span>
+                  )}
+                </GlassPanel>
+              ))}
+            </div>
+          </GlassPanel>
+        ))}
+      </motion.div>
+    </div>
   );
 }
