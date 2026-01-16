@@ -26,6 +26,7 @@ export function AnomaliesSection({ data }: AnomaliesSectionProps) {
       initial="hidden"
       animate="show"
     >
+      <h1>this is a test</h1>
       <GlassPanel variants={item}>
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-lg bg-warning/15 flex items-center justify-center">
